@@ -13,7 +13,7 @@ class YangRuiNet(M.Module):
         self.relu2 = M.ReLU()
         self.fc2 = M.Linear(512, 128)
         self.relu3 = M.ReLU()
-        self.fc3 = M.Linear(128, 4)
+        self.fc3 = M.Linear(128, 3)
 
     def forward(self, x):
         x = self.conv0(x)
