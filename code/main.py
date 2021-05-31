@@ -8,6 +8,8 @@ from megengine.optimizer import Adam
 import megengine.functional as F
 from .console2048 import Game, any_possible_moves
 import tqdm
+import json
+import os
 
 
 def make_input(grid):
@@ -19,8 +21,18 @@ def make_input(grid):
             r[table[v], i, j] = 1
     return r
 
+def dict_to_json(save_path, dict_):
+	if not os.path.exists(os.path.dirname(save_path)):
+		os.makedirs(os.path.dirname(save_path), exist_ok = True)
+	with open(save_path, 'w') as jo:
+		json.dump(dict_, jo)
 
 if __name__ == "__main__":
+	loss_dict = {}
+	Q_dict = {}
+	reward_dict = {}
+	avg_score_dict = {}
+
     data = rpm(5000)
 
     model = MegviiNet()
@@ -122,6 +134,18 @@ if __name__ == "__main__":
                     )
                     tq.update(1)
                     gm.backward(loss)
+					
+					if epoch % 100 == 0 && i == 0:
+						loss_dict[epoch*5] = loss.numpy().item()
+						Q_dict[epoch*5] = total_Q.numpy().item()
+						reward_dict[epoch*5] = total_reward.numpy().item()
+						avg_score_dict[epoch*5] = avg_score
+						
+						save_dir = './output/'
+						dict_to_json(save_dir + 'loss.json', loss_dict)
+						dict_to_json(save_dir + 'Q.json', Q_dict)
+						dict_to_json(save_dir + 'reward.json', reward_dict)
+						dict_to_json(save_dir + 'avg_score.json', avg_score_dict)
 
                 opt.step()
                 opt.clear_grad()
