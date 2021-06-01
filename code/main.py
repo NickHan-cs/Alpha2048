@@ -103,7 +103,7 @@ if __name__ == "__main__":
                 data.append((tensor(make_input(pre_grid)), tensor(
                     grid), tensor(a[k]), tensor(score / 128), done))
 
-            for i in range(5):
+            for j in range(5):
                 gm = GradManager().attach(model.parameters())
                 with gm:
                     s0, s1, a, reward, d = data.sample_batch(32)
@@ -135,7 +135,7 @@ if __name__ == "__main__":
                     tq.update(1)
                     gm.backward(loss)
 					
-					if epoch % 100 == 0 && i == 0:
+					if epoch % 100 == 0 and j == 0:
 						loss_dict[epoch*5] = loss.numpy().item()
 						Q_dict[epoch*5] = total_Q.numpy().item()
 						reward_dict[epoch*5] = total_reward.numpy().item()
