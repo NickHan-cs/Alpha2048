@@ -7,11 +7,11 @@ class BaselineBlock(M.Module):
         super().__init__()
         self.expansion = expansion
         self.channels = in_channels * self.expansion
-        self.conv0 = M.Conv2d(in_channels, self.channels, kernel_size=2, stride=1, padding=1)
-        self.conv1 = M.Conv2d(self.channels, self.channels, kernel_size=2, stride=1, padding=0)
+        self.conv0 = M.Conv2d(in_channels, self.channels, kernel_size=(2, 1), stride=1, padding=0)
+        self.conv1 = M.Conv2d(self.channels, self.channels, kernel_size=(1, 2), stride=1, padding=0)
 
     def forward(self, x):
-        identity = x
+        identity = x[:, :, 1:, 1:]
         x = self.conv0(x)
         x = F.relu(x)
         x = self.conv1(x)
@@ -22,14 +22,13 @@ class BaselineBlock(M.Module):
 
 class NaiveResNet(M.Module):
     def __init__(self):
-        super().__init__()
-        self.conv0 = M.Conv2d(16, 64, kernel_size=(2, 1), stride=1, padding=0)
-        self.conv1 = M.Conv2d(64, 64, kernel_size=(1, 2), stride=1, padding=0)
+        self.conv0 = M.Conv2d(16, 128, kernel_size=(2, 1), stride=1, padding=1)
+        self.conv1 = M.Conv2d(128, 128, kernel_size=(1, 2), stride=1, padding=0)
 
-        self.bb0 = BaselineBlock(64, 1)
-        self.bb1 = BaselineBlock(64, 1)
+        self.bb0 = BaselineBlock(128, 1)
+        self.bb1 = BaselineBlock(128, 1)
 
-        self.conv2 = M.Conv2d(64, 256, kernel_size=2, stride=1, padding=0)
+        self.conv2 = M.Conv2d(128, 256, kernel_size=2, stride=1, padding=0)
 
         self.dense0 = M.Linear(2 * 2 * 256, 16)
 
