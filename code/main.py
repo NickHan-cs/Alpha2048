@@ -1,5 +1,5 @@
 from .rpm import rpm
-from .model.megvii import MegviiNet
+from .model.navjin import NavjinNet
 import numpy as np
 import megengine as mge
 from megengine import tensor
@@ -37,8 +37,8 @@ if __name__ == "__main__":
 
     data = rpm(5000)
 
-    model = MegviiNet()
-    model_target = MegviiNet()
+    model = NavjinNet()
+    model_target = NavjinNet()
 
     table = {2 ** i: i for i in range(1, 16)}
     table[0] = 0

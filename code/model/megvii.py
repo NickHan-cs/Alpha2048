@@ -2,9 +2,9 @@ import megengine.module as M
 import megengine.functional as F
 
 
-class MegviiNet(M.Module):
+class Net(M.Module):
     def __init__(self):
-        super(MegviiNet, self).__init__()
+        super(Net, self).__init__()
         self.conv0 = M.Conv2d(16, 256, kernel_size=(2, 1), stride=1, padding=0)
         self.relu0 = M.ReLU()
         self.conv1 = M.Conv2d(
